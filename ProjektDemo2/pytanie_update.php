@@ -11,26 +11,26 @@ else
     //check for sign in status
     if(!$_SESSION['signed_in'])
     {
-        echo 'Musisz być zalogowany, aby opublikować odpowiedź.';
+        echo 'Musisz być zalogowany, aby edytować pytanie.';
     }
     else
     {
         $mysqli = new mysqli("localhost","root","admin","myschema1");
 
-        $sql = "UPDATE posts
-                SET post_content ='" . $_POST['post-content'] ."',".
-               "post_date =NOW()
-                WHERE post_id=" . $_GET['id'];
+        $sql = "UPDATE topics
+                SET topic_subject ='" . $_POST['topic_subject'] ."',".
+               "topic_date =NOW()
+                WHERE topic_id=" . $_GET['id'];
 
         $result = $mysqli->query($sql);
 
         if(!$result)
         {
-            echo 'Twoja odpowiedź nie została zapisana, spróbuj ponownie później.';
+            echo 'Twoja pytanie nie zostało zapisane, spróbuj ponownie później.';
         }
         else
         {
-            header("Location: komentarz_view.php?id=" . $_GET['topic_id'] );
+            header("Location: pytanie_view.php?id=" . $_GET['cat_id'] );
         }
     }
 }

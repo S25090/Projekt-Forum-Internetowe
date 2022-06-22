@@ -48,7 +48,8 @@ else
                     topic_id,
                     topic_subject,
                     topic_date,
-                    topic_cat
+                    topic_cat,
+                    topic_by
                 FROM
                     topics
                 WHERE
@@ -84,6 +85,10 @@ else
                     echo date('d-m-Y', strtotime($row['topic_date']));
                     echo " ";
                     echo "przez: " . $_SESSION['user_name'];
+                    if ($_SESSION['signed_in'] && $_SESSION['user_id'] == $row['topic_by']) {
+                        echo '<a href="pytanie_edit.php?id=' . $row['topic_id'] . '&cat_id=' . $_GET['id'] . '">&nbsp;&nbsp;Edytuj&nbsp;&nbsp;</a>';
+                        echo '<a href="pytanie_delete.php?id=' . $row['topic_id'] . '&cat_id=' . $_GET['id'] . '">Usuń</a>';
+                    }
                     echo '</td>';
                     echo '</tr>';
                 }

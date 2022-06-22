@@ -48,8 +48,11 @@ else
             {
 
                 echo '<form method="post" action="">
-                    Pytanie: <input type="text" name="topic_subject" />
+                    Pytanie: <br><textarea name="topic_subject" /></textarea><br>
                     Kategoria:';
+
+
+
 
                 echo '<select name="topic_cat">';
                 while($row = mysqli_fetch_assoc($result))
@@ -57,10 +60,8 @@ else
                     echo '<option value="' . $row['cat_id'] . '">' . $row['cat_name'] . '</option>';
                 }
                 echo '</select>';
-
-                echo 'Treść pytania: <textarea name="post_content" /></textarea>
-                    <input type="submit" value="Zadaj pytanie" />
-                 </form>';
+                echo '<input type="submit" value="Zadaj pytanie" />
+                      </form>';
             }
         }
     }

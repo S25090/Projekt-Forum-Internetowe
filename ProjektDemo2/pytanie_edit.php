@@ -1,11 +1,11 @@
 <?php
 include 'header.php';
 
-echo '<h2>Edytuj komentarz</h2>';
+echo '<h2>Edytuj pytanie</h2>';
 if($_SESSION['signed_in'] == false)
 {
     //the user is not signed in
-    echo 'Ups, musisz być <a href="/ProjektDemo2/signin.php">zalogowany</a> aby edytować komentarz.';
+    echo 'Ups, musisz być <a href="/ProjektDemo2/signin.php">zalogowany</a> aby edytować pytanie.';
 }
 else {
     $mysqli = new mysqli("localhost", "root", "admin", "myschema1");
@@ -13,14 +13,14 @@ else {
     if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
         $sql = "SELECT
-                    post_id,
-                    post_content,
-                    post_date,
-                    post_topic,
-                    post_by
+                    topic_id,
+                    topic_subject,
+                    topic_date,
+                    topic_cat,
+                    topic_by
                 FROM
-                    posts
-                WHERE post_id = " . $mysqli->real_escape_string($_GET['id']);
+                    topics
+                WHERE topic_id = " . $mysqli->real_escape_string($_GET['id']);
 
 
         $result = $mysqli->query($sql);
@@ -31,14 +31,14 @@ else {
             if (mysqli_num_rows($result) == 0) {
 
                 if ($_SESSION['user_level'] == 1) {
-                    echo 'Nie utworzyłeś jeszcze pytań na forum.';
+                    echo 'Nie utworzyłeś jeszcze kategorii na forum.';
                 } else {
-                    echo 'Zanim napiszesz komentarz, upewnij się czy są pytania na forum.';
+                    echo 'Zanim napiszesz pytanie, upewnij się czy są kategorie na forum.';
                 }
             } else {
                 $row = mysqli_fetch_assoc($result);
-                echo '<form method="post" action="komentarz_update.php?id=' . $_GET['id'] . '&topic_id=' . $_GET['topic_id'] . '">' .
-                    '<textarea name="post-content">' . $row['post_content'] . '</textarea>' .
+                echo '<form method="post" action="pytanie_update.php?id=' . $_GET['id'] . '&cat_id=' . $_GET['cat_id'] . '">' .
+                    '<textarea name="topic_subject">' . $row['topic_subject'] . '</textarea>' .
                     '<input type="submit" value="Zatwierdź" /> 
                     </form>';
             }
