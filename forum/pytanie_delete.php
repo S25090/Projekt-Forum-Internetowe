@@ -1,5 +1,8 @@
 <?php
 include 'header.php';
+require_once 'db_connect.php';
+$db_connect = new db_connect();
+$mysqli = $db_connect->connect();
 
 if(!$_SESSION['signed_in'])
 {
@@ -7,10 +10,8 @@ if(!$_SESSION['signed_in'])
 }
 else
 {
-    $mysqli = new mysqli("localhost","root","admin","myschema1");
-
-    $sql = "DELETE FROM topics
-            WHERE topic_id=" . $_GET['id'];
+    $sql = "DELETE FROM pytania
+            WHERE pytanie_id=" . $_GET['id'];
 
     $result = $mysqli->query($sql);
 

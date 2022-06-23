@@ -1,7 +1,8 @@
 <?php
-//kategoria_create.php
-include 'connect.php';
 include 'header.php';
+require_once 'db_connect.php';
+$db_connect = new db_connect();
+$mysqli = $db_connect->connect();
 
 echo "<style>
 table, th, td {
@@ -10,7 +11,6 @@ table, th, td {
     width: 100%;
 }
 </style>";
-
 
 echo '<tr>';
 echo '<td class="leftpart">';
@@ -21,14 +21,15 @@ echo '<td class="rightpart">';
 echo '</td>';
 echo '</tr>';
 
-$mysqli = new mysqli("localhost","root","admin","myschema1");
+if ( $mysqli == null)
+    return;
 
 $sql = "SELECT
             cat_id,
             cat_name,
             cat_description
         FROM
-            categories
+            kategorie
 		";
 
 $result = $mysqli->query($sql);
@@ -39,19 +40,18 @@ if(!$result)
 }
 else
 {
-    if(mysqli_num_rows($result) == 0)
+    if($result->num_rows == 0)
     {
         echo 'Nie zdefiniowano jeszcze kategorii.';
     }
     else
     {
-        //prepare the table
         echo '<table>
               <tr>
                 <th>Kategoria</th>
               </tr>';
 
-        while($row = mysqli_fetch_assoc( $result))
+        while($row = $result->fetch_assoc( ))
         {
             echo '<tr>';
             echo '<td>';

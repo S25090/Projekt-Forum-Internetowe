@@ -1,26 +1,25 @@
 <?php
 include 'header.php';
+require_once 'db_connect.php';
+$db_connect = new db_connect();
+$mysqli = $db_connect->connect();
 
 if($_SERVER['REQUEST_METHOD'] != 'POST')
 {
-    //someone is calling the file directly, which we don't want
     echo 'Tego pliku nie można wywołać bezpośrednio.';
 }
 else
 {
-    //check for sign in status
     if(!$_SESSION['signed_in'])
     {
         echo 'Musisz być zalogowany, aby edytować pytanie.';
     }
     else
     {
-        $mysqli = new mysqli("localhost","root","admin","myschema1");
-
-        $sql = "UPDATE topics
-                SET topic_subject ='" . $_POST['topic_subject'] ."',".
-               "topic_date =NOW()
-                WHERE topic_id=" . $_GET['id'];
+        $sql = "UPDATE pytania
+                SET pytanie_subject ='" . $_POST['pytanie_subject'] ."',".
+               "pytanie_date =NOW()
+                WHERE pytanie_id=" . $_GET['id'];
 
         $result = $mysqli->query($sql);
 

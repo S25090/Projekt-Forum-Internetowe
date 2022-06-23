@@ -1,40 +1,36 @@
 <?php
-//pytanie_create.php
 include 'header.php';
+require_once 'db_connect.php';
+$db_connect = new db_connect();
+$mysqli = $db_connect->connect();
 
 echo '<h2>Zadaj pytanie</h2>';
 if($_SESSION['signed_in'] == false)
 {
-    //the user is not signed in
-    echo 'Ups, musisz być <a href="/ProjektDemo2/signin.php">zalogowany</a>,aby zadać pytanie.';
+
+    echo 'Ups, musisz być <a href="/forum/login.php">zalogowany</a>,aby zadać pytanie.';
 }
 else
 {
-    $mysqli = new mysqli("localhost","root","admin","myschema1");
-    //the user is signed in
     if($_SERVER['REQUEST_METHOD'] != 'POST')
     {
-        //the form hasn't been posted yet, display it
-        //retrieve the categories from the database for use in the dropdown
         $sql = "SELECT
                     cat_id,
                     cat_name,
                     cat_description
                 FROM
-                    categories";
+                    kategorie";
 
         $result = $mysqli->query($sql);
 
         if(!$result)
         {
-            //the query failed, uh-oh :-(
             echo 'Błąd podczas wybierania danych z bazy. Spróbuj ponownie później.';
         }
         else
         {
-            if(mysqli_num_rows($result) == 0)
+            if($result->num_rows == 0)
             {
-                //there are no categories, so a topic can't be posted
                 if($_SESSION['user_level'] == 1)
                 {
                     echo 'Nie utworzyłeś jeszcze żadnych kategorii.';
@@ -46,16 +42,12 @@ else
             }
             else
             {
-
                 echo '<form method="post" action="">
-                    Pytanie: <br><textarea name="topic_subject" /></textarea><br>
+                    Pytanie: <br><textarea name="pytanie_subject" /></textarea><br>
                     Kategoria:';
 
-
-
-
-                echo '<select name="topic_cat">';
-                while($row = mysqli_fetch_assoc($result))
+                echo '<select name="pytanie_cat">';
+                while($row = $result->fetch_assoc( ))
                 {
                     echo '<option value="' . $row['cat_id'] . '">' . $row['cat_name'] . '</option>';
                 }
@@ -68,23 +60,20 @@ else
     else
     {
         try {
-
-            $mysqli = new mysqli("localhost", "root", "admin", "myschema1");
-
-            if(!empty($_POST['topic_subject']) && !ctype_space($_POST['topic_subject'])) {
+            if(!empty($_POST['pytanie_subject']) && !ctype_space($_POST['pytanie_subject'])) {
                 $sql = "INSERT INTO 
-                    topics(topic_subject,
-                           topic_date,
-                           topic_cat,
-                           topic_by)
-               VALUES('" . $mysqli->real_escape_string($_POST['topic_subject']) . "',
+                    pytania(pytanie_subject,
+                           pytanie_date,
+                           pytanie_cat,
+                           pytanie_by)
+               VALUES('" . $mysqli->real_escape_string($_POST['pytanie_subject']) . "',
                            NOW(),
-                           " . $mysqli->real_escape_string($_POST['topic_cat']) . ",
+                           " . $mysqli->real_escape_string($_POST['pytanie_cat']) . ",
                            " . $_SESSION['user_id'] . "
                            )";
 
                 $result = $mysqli->query($sql);
-                header('Location: index.php');
+                header('Location: pytanie_view.php?id=' . $_POST['pytanie_cat']);
             } else {
                 echo 'Nazwa pytania nie moze byc pusta!';
             }
